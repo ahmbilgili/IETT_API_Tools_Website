@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block head %}
+<title>Departure Count</title>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-row justify-content-center">
+    <div class="form-div d-flex flex-column">
+        <h1 class="d-flex flex-row justify-content-center" style="margin-top: 2px;"><strong>Departure Count</strong></h1>
+        <div class="card bg-light" style="width: 35rem;">
+            <div class="card-body">
+                <p>This service displays information about top 50 lines with maximum number of passengers.</p>
+                <p>First field expects input of type date.</p> 
+            </div>
+        </div>
+        <form class="row g-2 d-flex flex-row justify-content-center" style="margin-top: 2px;" method="POST">
+            {{ form.hidden_tag }}
+            <div class="col-auto">
+                {{ form.date(placeholder="YYYY-MM-DD") }}
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% if result is iterable %}
+    {% for element in result %}
+        <p>{{element}}</p>
+    {% endfor %}
+{% else %}
+    <div class="d-flex flex-row justify-content-center">
+        <p class="text-danger"><strong>{{result}}</strong></p>
+    </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,69 @@
+import lxml.etree
+import zeep
+import json
+import os
+import lxml
+from .utils import functions as helper_functions
+
+wsdl = "https://api.ibb.gov.tr/iett/ibb/ibb360.asmx?wsdl"
+
+translate_dict = {"ID": "Id", "NARSIVGOREVID": "Archive task ID", "NKAYITGUNU": "Action date", "SHATKODU": "Line code",
+                  "SGUZERGAHKODU": "Route code", "SKAPINUMARA": "Door number", "DTBASLAMAZAMANI": "Mission start date", "DTBITISZAMANI": "Mission end date",
+                  "SGOREVDURUM": "Mission status", "NGOREVID": "Mission ID", "DTPLANLANANBASLANGICZAMANI": "Planned mission start date", 
+                  "DTDUZENLENENBASLANGICZAMANI": "Edited mission start date"}
+
+def convert_date_to_yyyymmdd(date_input):
+    date_input = date_input.split("-")
+    converted_str = str(date_input[0]) + str(date_input[1]) + str(date_input[2])
+    # print(converted_str)
+    return converted_str
+
+def soap_call(date):
+    client = zeep.Client(wsdl=wsdl)
+
+    response = client.service.GetIettArsivGorev_XML(date)
+    
+    if len(response) == 0:
+        raise Exception("No data found")
+
+    return response
+    
+def parse_xml(body):
+    output_buffer = []
+    for table in body:
+        if isinstance(table, lxml.etree._Element) == False:
+            raise TypeError(f"Invalid type {type(table)} passed to parse_xml function")
+        output_buffer.append(helper_functions.parse_and_translate_values_etree(translate_dict, table))
+
+    return output_buffer
+
+def get_specific_bus_line_data(table_list, bus_line_code):
+    bus_line_data = []
+    if bus_line_code == "":
+        return table_list
+    else:
+        for table in table_list:
+            if bus_line_code == table["Line code"]:
+                bus_line_data.append(table)
+    return bus_line_data
+
+def main(date, bus_line):
+    try:
+        date = convert_date_to_yyyymmdd(date)
+
+        response = soap_call(date)
+
+        response_parsed = parse_xml(response)
+
+        bus_line = helper_functions.special_char_upper_func(bus_line)
+
+        specific_bus_line_data = get_specific_bus_line_data(response_parsed, bus_line)
+
+        # helper_functions.print_result(specific_bus_line_data)
+
+        return specific_bus_line_data
+    except Exception as exc:
+        return exc
+    
+if __name__ == "__main__":
+    main()
