@@ -10,6 +10,7 @@ departure_count_bp = Blueprint("departure_count", __name__, template_folder="tem
 def departure_count_day_handler():
     form = DepartureCountForm(request.form)
     if request.method == "POST":
+        print(type(request.form["date"]))
         result = departure_count_day.main(request.form["date"])
         return render_template("departure_count.html", form=form, result=result)
     # not a great approach

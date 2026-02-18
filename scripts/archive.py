@@ -3,6 +3,7 @@ import zeep
 import json
 import os
 import lxml
+import datetime
 from .utils import functions as helper_functions
 
 wsdl = "https://api.ibb.gov.tr/iett/ibb/ibb360.asmx?wsdl"
@@ -49,6 +50,9 @@ def get_specific_bus_line_data(table_list, bus_line_code):
 
 def main(date, bus_line):
     try:
+        helper_functions.validate_date_input(date)
+
+        # API Call expects date of format yyyy-mm-dd
         date = convert_date_to_yyyymmdd(date)
 
         response = soap_call(date)

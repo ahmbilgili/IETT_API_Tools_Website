@@ -1,4 +1,5 @@
 import time
+import datetime
 
 # to convert some of the turkish lowercase characters to their corresponding upper case pairs
 def special_char_upper_func(param):
@@ -22,9 +23,9 @@ def ms_parser(line):
     return date_to_ms
 
 # Converts the dictionary elements in given list to a string format.
-def convert_list_tostr(announcment_list):
+def convert_list_tostr(announcement_list):
     out_string = ""
-    for element in announcment_list:
+    for element in announcement_list:
         for key, value in element.items():
             out_string += f"{key}: {value}\n"
         out_string += "\n"
@@ -55,6 +56,27 @@ def print_result(buffer):
         for key, value in element.items():
             print(f"{key}: {value}")
         print()
+
+# Checks if date_input is of type YYYY-MM-DD
+def validate_date_input(date_val):
+    date_val_list = date_val.split("-")
+
+    if len(date_val_list) != 3:
+        raise ValueError("Incorrect format")    
+    elif int(date_val_list[0]) < 2019:
+        raise ValueError("Year cannot be less than 2019")
+    elif int(date_val_list[1]) < 1 or int(date_val_list[1]) > 12:
+        raise ValueError("Invalid month")
+    elif int(date_val_list[2]) < 1 or int(date_val_list[2]) > 31:
+        raise ValueError("Invalid day")
+    return True
+
+# Converts date (in str format, YYYY-MM-DD) to YYYYMMDD format
+def convert_date_to_yyyymmdd(date_input):
+    date_input = date_input.split("-")
+    converted_str = str(date_input[0]) + str(date_input[1]) + str(date_input[2])
+    # print(converted_str)
+    return converted_str
 
 def timer(sec, mutex):
     mutex.acquire()

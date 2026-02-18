@@ -10,7 +10,22 @@ departure_hours_bp = Blueprint("departure_hours", __name__, template_folder="tem
 def departure_hours_handler():
     form = DepartureHoursForm(request.form)
     if request.method == "POST":
-        result = scheduled_departure_hours.main(request.form["line_code"], request.form["direction"], request.form["day"])
-        return render_template("departure_hours.html", form=form, result=result)
-    # not a great approach
-    return render_template("departure_hours.html", form=form, result=[])
+        if "direction" in request.form:
+            result = scheduled_departure_hours.main(request.form["line_code"], request.form["day"], request.form["direction"])
+            # print(result)
+            if type(result) not in [Exception, ValueError, KeyError]:
+                return render_template("departure_hours.html", form=form, status="initial", result=result)
+            return render_template("departure_hours.html", form=form, status="initial", message=result)
+        else:
+            # Line code and day is submitted. Check if an exception is raised.
+            # If so, return the initial form. Otherwise, return the updated form by adding direction field.
+            line_info = scheduled_departure_hours.main(request.form["line_code"], request.form["day"], querying_for_line=True)
+            if type(line_info) not in [Exception, ValueError]:
+                # result = result.split("-")
+                return render_template("departure_hours.html", form=form, status="final", line_info=line_info)
+
+            # An exception was returned as a result, so don't enable the direction field.
+            print(line_info)
+            return render_template("departure_hours.html", form=form, status="initial", message=line_info)
+    # GET request, show line code and day field only. Don't show direction yet.
+    return render_template("departure_hours.html", form=form, status="initial")

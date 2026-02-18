@@ -4,6 +4,7 @@ from zeep import Client, Settings
 import json
 import sys
 from .utils import functions as helper_functions
+from . import line_service
 
 translate_dict = {"SHATKODU": "Line code", "HATADI": "Line name", "SGUZERAH": "Route", "SYON": "Direction", 
                   "SGUNTIPI": "Day type", "GUZERGAH_ISARETI": "Route sign", "SSERVISTIPI": "Service type", "DT": "Time information"}
@@ -13,7 +14,7 @@ wsdl = "scripts/xml/PlanlananSeferSaati.asmx.xml"
 def validate_and_format_line_code_day(line_code, day):
     line_code = helper_functions.special_char_upper_func(line_code)
 
-    if line_code == "": # I am expecting a hat_kodu, so its reasonable to place exception here.
+    if line_code == "": # I am expecting a line_code, so its reasonable to place exception here.
         raise ValueError("Bus code cannot be left empty")
     
     day = day.upper()
@@ -50,11 +51,23 @@ def print_bus_line_names(bus_lines):
     for element in bus_lines:
         print(element)
 
-def validate_direction(direction):   
-    direction = direction.upper() 
-    if direction != "G" and direction != "D":
-        raise ValueError("Incorrect direction choice")
-    return direction
+def convert_direction_to_G_D(line_info, direction):  
+    if direction != "": 
+        directions = line_info[0]["Line name"].split("-")
+        # Assume line name = sabancı üni / kurtköy
+        # 0 -> Sabancı Üni
+        # 1 -> Kurtköy metro
+        # G (Gidiş) -> Left to right, D (Dönüş)-> Right to left
+        # if direction is kurtköy -> G (Gidiş) 
+        # if direction is sabancı -> D (Dönüş)
+        direction = direction.upper()
+        if direction in directions[1]:
+            return "G"
+        elif direction in directions[0]:
+            return "D"
+        else:
+            raise Exception("Invalid direction!")
+    raise Exception("Invalid direction!")
 
 def get_specific_timetables(soap_response_list, user_inputs):
     outp_buffer = []
@@ -69,22 +82,30 @@ def get_specific_timetables(soap_response_list, user_inputs):
         
     return outp_buffer
 
-def main(line_code, direction, day):
+def main(line_code, day, direction="", querying_for_line=False):
     try:
-        user_inputs = validate_and_format_line_code_day(line_code, day)
-        user_inputs["Direction"] = validate_direction(direction)
-    
-        soap_response = soap_call(user_inputs["Line_Code"])
+        if (querying_for_line):
+            user_inputs = validate_and_format_line_code_day(line_code, day)
+            line_info = line_service.main(line_code)
+            return [line_info[0]["Line name"]]
+        else:
+            user_inputs = validate_and_format_line_code_day(line_code, day)
 
-        soap_response_list = convert_soap_response_to_list(soap_response)
+            line_info = line_service.main(line_code)
 
-        unique_bus_line_names = obtain_unique_bus_line_names(soap_response_list)
+            user_inputs["Direction"] = convert_direction_to_G_D(line_info, direction)
+        
+            soap_response = soap_call(user_inputs["Line_Code"])
 
-        # print_bus_line_names(unique_bus_line_names)
-                        
-        timetables = get_specific_timetables(soap_response_list, user_inputs)
+            soap_response_list = convert_soap_response_to_list(soap_response)
 
-        return timetables
+            unique_bus_line_names = obtain_unique_bus_line_names(soap_response_list)
+
+            # print_bus_line_names(unique_bus_line_names)
+                            
+            timetables = get_specific_timetables(soap_response_list, user_inputs)
+            
+            return timetables
     except Exception as exc:
         return exc
 

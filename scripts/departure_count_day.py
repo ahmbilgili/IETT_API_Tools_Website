@@ -14,19 +14,6 @@ translate_dict = {"Gun": "Day", "Hat": "Line", "Yolculuk": "Number of trips"}
 def ms_to_date_converter(ms_input):
     return date.fromisoformat('1970-01-02') + timedelta(milliseconds=ms_input) # epoch + 1 + ms, API call returns values of previous day
 
-def validate_inputs(date_val):
-    date_val_list = date_val.split("-")
-
-    if len(date_val_list) != 3:
-        raise ValueError("Incorrect format")    
-    elif int(date_val_list[0]) < 2019:
-        raise ValueError("Year cannot be less than 2019")
-    elif int(date_val_list[1]) < 1 or int(date_val_list[1]) > 12:
-        raise ValueError("Invalid month")
-    elif int(date_val_list[2]) < 1 or int(date_val_list[2]) > 31:
-        raise ValueError("Invalid day")
-    return True
-
 def soap_call(date_val):
     client = zeep.Client(wsdl=wsdl)
     response = client.service.GetIettYolculukHat_json(date_val)
@@ -57,7 +44,7 @@ def get_data_of_buses(response_list):
 
 def main(date_val):
     try:
-        # validate_inputs(date_val)
+        helper_functions.validate_date_input(date_val)        
         
         soap_response = soap_call(date_val)
 

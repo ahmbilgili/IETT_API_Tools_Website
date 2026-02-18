@@ -7,8 +7,15 @@
 
 <div class="d-flex flex-row justify-content-center">
     <div class="form-div d-flex flex-column">
-        <h1 class="d-flex flex-row justify-content-center"><strong>Line Service</strong></h1>
-        <form class="row g-2 d-flex flex-row justify-content-center" method="POST">
+        <h1 class="d-flex flex-row justify-content-center" style="margin-top: 2px;"><strong>Line Service</strong></h1>
+        <div class="card bg-light" style="width: 35rem;">
+            <div class="card-body">
+                <p>This service displays information about given line.</p>
+                <p>Field expects line code.</p> 
+                <p>Leave the field empty to see all lines.</p>
+            </div>
+        </div>
+        <form class="row g-2 d-flex flex-row justify-content-center" style="margin-top: 2px;" method="POST">
             {{ form.hidden_tag }}
             <div class="col-auto">
                 {{ form.line_code(placeholder="Line Code")}}
