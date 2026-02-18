@@ -12,7 +12,6 @@ def departure_hours_handler():
     if request.method == "POST":
         if "direction" in request.form:
             result = scheduled_departure_hours.main(request.form["line_code"], request.form["day"], request.form["direction"])
-            # print(result)
             if type(result) not in [Exception, ValueError, KeyError]:
                 return render_template("departure_hours.html", form=form, status="initial", result=result)
             return render_template("departure_hours.html", form=form, status="initial", message=result)
@@ -25,7 +24,6 @@ def departure_hours_handler():
                 return render_template("departure_hours.html", form=form, status="final", line_info=line_info)
 
             # An exception was returned as a result, so don't enable the direction field.
-            print(line_info)
             return render_template("departure_hours.html", form=form, status="initial", message=line_info)
     # GET request, show line code and day field only. Don't show direction yet.
     return render_template("departure_hours.html", form=form, status="initial")

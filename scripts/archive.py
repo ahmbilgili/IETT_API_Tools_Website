@@ -13,12 +13,6 @@ translate_dict = {"ID": "Id", "NARSIVGOREVID": "Archive task ID", "NKAYITGUNU": 
                   "SGOREVDURUM": "Mission status", "NGOREVID": "Mission ID", "DTPLANLANANBASLANGICZAMANI": "Planned mission start date", 
                   "DTDUZENLENENBASLANGICZAMANI": "Edited mission start date"}
 
-def convert_date_to_yyyymmdd(date_input):
-    date_input = date_input.split("-")
-    converted_str = str(date_input[0]) + str(date_input[1]) + str(date_input[2])
-    # print(converted_str)
-    return converted_str
-
 def soap_call(date):
     client = zeep.Client(wsdl=wsdl)
 
@@ -51,9 +45,10 @@ def get_specific_bus_line_data(table_list, bus_line_code):
 def main(date, bus_line):
     try:
         helper_functions.validate_date_input(date)
+        helper_functions.validate_line_code(bus_line)
 
         # API Call expects date of format yyyy-mm-dd
-        date = convert_date_to_yyyymmdd(date)
+        date = helper_functions.convert_date_to_yyyymmdd(date)
 
         response = soap_call(date)
 
@@ -62,8 +57,8 @@ def main(date, bus_line):
         bus_line = helper_functions.special_char_upper_func(bus_line)
 
         specific_bus_line_data = get_specific_bus_line_data(response_parsed, bus_line)
-
-        # helper_functions.print_result(specific_bus_line_data)
+        if len(specific_bus_line_data) == 0:
+            raise Exception("No logs found!")
 
         return specific_bus_line_data
     except Exception as exc:

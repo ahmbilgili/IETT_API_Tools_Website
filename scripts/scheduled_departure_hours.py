@@ -77,7 +77,7 @@ def get_specific_timetables(soap_response_list, user_inputs):
             outp_buffer.append(helper_functions.parse_and_translate_values_dict(translate_dict, element))
 
     if len(outp_buffer) == 0:
-        print("Unable to find timetable of queried bus line with given specifics")
+        # print("Unable to find timetable of queried bus line with given specifics")
         exit()
         
     return outp_buffer

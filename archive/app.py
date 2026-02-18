@@ -11,7 +11,8 @@ def archive_handler():
     form = ArchiveForm(request.form)
     if request.method == "POST":
         result = archive.main(request.form["date"], request.form["line_code"])
-        print(type(request.form["date"]))
-        return render_template("archive.html", form=form, result=result)
+        if type(result) not in [Exception, ValueError, TypeError]:
+            return render_template("archive.html", form=form, result=result)
+        return render_template("archive.html", form=form, message=result)
     # not a great approach
-    return render_template("archive.html", form=form, result=[])
+    return render_template("archive.html", form=form)

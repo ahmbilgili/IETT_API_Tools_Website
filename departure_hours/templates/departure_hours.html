@@ -15,41 +15,41 @@
                 <p>Third field expects direction. It will appear after you enter line code, day and submit</p> 
             </div>
         </div>
+        {% if status == "initial" %}
         <form class="row g-2 d-flex flex-row justify-content-center" style="margin-top: 2px;" method="POST">
             {{ form.hidden_tag }}
-            {% if status == "initial" %}
             <div class="col-auto">
                 {{ form.line_code(placeholder="Line Code") }}
                 {{ form.day(placeholder="Day") }}
                 <button type="submit" class="btn btn-primary">Search</button>
             </div>
-            {% else %}
-            <div class="d-flex flex-column">
-                <div class="card bg-info" style="width: 35rem;">
-                    <div class="card-body">
-                        <p>Line chosen: {{line_info}}</p>
-                    </div>
-                </div>
-                <div class="col-auto mx-auto" style="margin-top: 2px;">
-                    {{ form.line_code(placeholder="Line Code") }}
-                    {{ form.day(placeholder="Day") }}
-                    {{ form.direction(placeholder="Direction") }}
-                    <button type="submit" class="btn btn-primary">Search</button>
-                </div>
-            </div>
-            {% endif %}
         </form>
+        {% else %}
+        <div class="card bg-light" style="width: 35rem;">
+            <div class="card-body">
+                <p>Line chosen: {{line_info}}</p>
+            </div>
+        </div>
+        <form class="row g-2 d-flex flex-row justify-content-center" style="margin-top: 2px;" method="POST">
+            {{ form.hidden_tag }}
+            <div class="col-auto" style="margin-top: 2px;">
+                {{ form.line_code(placeholder="Line Code") }}
+                {{ form.day(placeholder="Day") }}
+                {{ form.direction(placeholder="Direction") }}
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </form>
+        {% endif %}
     </div>
 </div>
-{% if result is defined %}
-    {% for element in result %}
-        <p>{{element}}</p>
-    {% endfor %}
-{% endif %}
 {% if message is defined %}
     <div class="d-flex flex-row justify-content-center">
         <p class="text-danger mx-auto"><strong>{{message}}</strong></p>
     </div>
 {% endif %}
-
+{% if result is defined %}
+    {% for element in result %}
+        <p>{{element}}</p>
+    {% endfor %}
+{% endif %}
 {% endblock %}

@@ -10,6 +10,8 @@ def announcements_handler():
     form = AnnouncementsForm(request.form)
     if request.method == "POST":
         result = announcements.main(request.form["line_code"])
-        return render_template("announcements.html", form=form, result=result)
+        if type(result) not in [Exception, ValueError, TypeError]:
+            return render_template("announcements.html", form=form, result=result)
+        return render_template("announcements.html", form=form, message=result)
     # not a great approach
-    return render_template("announcements.html", form=form, result=[])
+    return render_template("announcements.html", form=form)

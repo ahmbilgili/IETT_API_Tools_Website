@@ -24,13 +24,14 @@
         </form>
     </div>
 </div>
-{% if result is iterable %}
+{% if message is defined %}
+    <div class="d-flex flex-row justify-content-center">
+        <p class="text-danger"><strong>{{message}}</strong></p>
+    </div>
+{% endif %}
+{% if result is defined %}
     {% for element in result %}
         <p>{{element}}</p>
     {% endfor %}
-{% else %}
-    <div class="d-flex flex-row justify-content-center">
-        <p class="text-danger"><strong>{{result}}</strong></p>
-    </div>
 {% endif %}
 {% endblock %}

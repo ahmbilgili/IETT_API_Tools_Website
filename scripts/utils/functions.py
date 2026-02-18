@@ -71,6 +71,10 @@ def validate_date_input(date_val):
         raise ValueError("Invalid day")
     return True
 
+def validate_line_code(line_code):
+    if line_code == "":
+        raise ValueError("Incorrect line code")
+    
 # Converts date (in str format, YYYY-MM-DD) to YYYYMMDD format
 def convert_date_to_yyyymmdd(date_input):
     date_input = date_input.split("-")

@@ -18,7 +18,7 @@ def soap_call(date_val):
     client = zeep.Client(wsdl=wsdl)
     response = client.service.GetIettYolculukHat_json(date_val)
     if len(response) == 2:
-        raise Exception("No data for given date found!")
+        raise Exception("No records found for the given date")
     return response
 
 def convert_soap_response_to_list(soap_response):
@@ -51,9 +51,6 @@ def main(date_val):
         soap_response_list = convert_soap_response_to_list(soap_response)
 
         bus_data = get_data_of_buses(soap_response_list)
-        
-        if len(bus_data) == 0:
-            raise Exception("Number of trips not found for the specified bus line")
         
         return bus_data
     except Exception as exc:

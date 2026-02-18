@@ -15,9 +15,6 @@ def take_line_code(line_code_input):
 def soap_call(line_code):
     client = zeep.Client(wsdl=wsdl)
     line_service_response = client.service.HatServisi_GYY(line_code) # returns lxml.etree._Element
-
-    if len(line_service_response) == 0:
-        raise Exception("Bus line not found")
     return line_service_response
 
 def parse_etree(input_lxml_etree):
@@ -31,6 +28,8 @@ def main(line_code):
         line_code = take_line_code(line_code)
         line_service_response = soap_call(line_code)
         parsed_response = parse_etree(line_service_response)
+        if len(parsed_response) == 0:
+            raise Exception("No records found for the given line")
         return parsed_response
     except Exception as exc:
         return exc
