@@ -43,26 +43,23 @@ def get_specific_bus_line_data(table_list, bus_line_code):
     return bus_line_data
 
 def main(date, bus_line):
-    try:
-        helper_functions.validate_date_input(date)
-        helper_functions.validate_line_code(bus_line)
+    helper_functions.validate_date_input(date)
+    helper_functions.validate_line_code(bus_line)
 
-        # API Call expects date of format yyyy-mm-dd
-        date = helper_functions.convert_date_to_yyyymmdd(date)
+    # API Call expects date of format yyyy-mm-dd
+    date = helper_functions.convert_date_to_yyyymmdd(date)
 
-        response = soap_call(date)
+    response = soap_call(date)
 
-        response_parsed = parse_xml(response)
+    response_parsed = parse_xml(response)
 
-        bus_line = helper_functions.special_char_upper_func(bus_line)
+    bus_line = helper_functions.special_char_upper_func(bus_line)
 
-        specific_bus_line_data = get_specific_bus_line_data(response_parsed, bus_line)
-        if len(specific_bus_line_data) == 0:
-            raise Exception("No logs found!")
+    specific_bus_line_data = get_specific_bus_line_data(response_parsed, bus_line)
+    if len(specific_bus_line_data) == 0:
+        raise Exception("No logs found!")
 
-        return specific_bus_line_data
-    except Exception as exc:
-        return exc
+    return specific_bus_line_data
     
 if __name__ == "__main__":
     main()

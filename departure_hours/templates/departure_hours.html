@@ -5,14 +5,14 @@
 
 {% block content %}
 <div class="d-flex flex-row justify-content-center">
-    <div class="form-div d-flex flex-column">
+    <div class="form-div d-flex flex-column justify-content-center">
         <h1 class="d-flex flex-row justify-content-center" style="margin-top: 2px;"><strong>Departure Hours</strong></h1>
-        <div class="card bg-light" style="width: 35rem;">
+        <div class="card bg-light d-flex flex-row justify-content-center" style="width: 35rem;">
             <div class="card-body">
                 <p>This service displays information about departure hours of the given line.</p>
                 <p>First field expects line code.</p> 
                 <p>Second field expects day type (weekday/saturday/sunday).</p> 
-                <p>Third field expects direction. It will appear after you enter line code, day and submit</p> 
+                <p>Third field will appear after submitting the form. Expects the direction you wish to travel to.</p> 
             </div>
         </div>
         {% if status == "initial" %}
@@ -25,12 +25,13 @@
             </div>
         </form>
         {% else %}
-        <div class="card bg-light" style="width: 35rem;">
+        <div class="card bg-light d-flex flex-row justify-content-center" style="width: 35rem;">
             <div class="card-body">
                 <p>Line chosen: {{line_info}}</p>
             </div>
         </div>
-        <form class="row g-2 d-flex flex-row justify-content-center" style="margin-top: 2px;" method="POST">
+        
+        <form class="row g-2" style="margin-top: 2px;" method="POST">
             {{ form.hidden_tag }}
             <div class="col-auto" style="margin-top: 2px;">
                 {{ form.line_code(placeholder="Line Code") }}
@@ -48,8 +49,30 @@
     </div>
 {% endif %}
 {% if result is defined %}
-    {% for element in result %}
-        <p>{{element}}</p>
-    {% endfor %}
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+            <th scope="col">Line code</th>
+            <th scope="col">Line name</th>
+            <th scope="col">Route</th>
+            <th scope="col">Direction</th>
+            <th scope="col">Day type</th>
+            <th scope="col">Time information</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {% for element in result %}
+                <tr>
+                    <td>{{element["Line code"]}}</td>
+                    <td>{{element["Line name"]}}</td>
+                    <td>{{element["Route"]}}</td>
+                    <td>{{element["Direction"]}}</td>
+                    <td>{{element["Day type"]}}</td>
+                    <td>{{element["Time information"]}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endif %}
 {% endblock %}

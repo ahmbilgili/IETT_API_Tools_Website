@@ -11,19 +11,19 @@ def departure_hours_handler():
     form = DepartureHoursForm(request.form)
     if request.method == "POST":
         if "direction" in request.form:
-            result = scheduled_departure_hours.main(request.form["line_code"], request.form["day"], request.form["direction"])
-            if type(result) not in [Exception, ValueError, KeyError]:
+            try:
+                result = scheduled_departure_hours.main(request.form["line_code"], request.form["day"], request.form["direction"])
                 return render_template("departure_hours.html", form=form, status="initial", result=result)
-            return render_template("departure_hours.html", form=form, status="initial", message=result)
+            except Exception as exc:
+                return render_template("departure_hours.html", form=form, status="initial", message=str(exc))
         else:
             # Line code and day is submitted. Check if an exception is raised.
             # If so, return the initial form. Otherwise, return the updated form by adding direction field.
-            line_info = scheduled_departure_hours.main(request.form["line_code"], request.form["day"], querying_for_line=True)
-            if type(line_info) not in [Exception, ValueError]:
-                # result = result.split("-")
+            try:
+                line_info = scheduled_departure_hours.main(request.form["line_code"], request.form["day"], querying_for_line=True)
                 return render_template("departure_hours.html", form=form, status="final", line_info=line_info)
-
-            # An exception was returned as a result, so don't enable the direction field.
-            return render_template("departure_hours.html", form=form, status="initial", message=line_info)
+            except Exception as exc:
+                # An exception was returned as a result, so don't enable the direction field.
+                return render_template("departure_hours.html", form=form, status="initial", message=str(exc))
     # GET request, show line code and day field only. Don't show direction yet.
     return render_template("departure_hours.html", form=form, status="initial")

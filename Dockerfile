@@ -6,6 +6,11 @@
 
 # Want to help us make this template better? Share your feedback here: https://forms.gle/ybq9Krt8jtBL3iCk7
 
+
+
+# docker build -t iett_api_website --platform=linux/amd64 -f app/Dockerfile .
+# --platform sets the platform to amd64
+# -f sets the location of dockerfile, so that you can work in your current context (.) instead of context ./app
 FROM python:3.15.0a5-alpine3.23
 
 COPY ./app ./requirements.txt ./app

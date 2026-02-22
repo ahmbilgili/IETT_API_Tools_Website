@@ -30,8 +30,31 @@
     </div>
 {% endif %}
 {% if result is defined %}
-    {% for element in result %}
-        <p>{{element}}</p>
-    {% endfor %}
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+            <th scope="col">Line code</th>
+            <th scope="col">Route code</th>
+            <th scope="col">Door number</th>
+            <th scope="col">Start date</th>
+            <th scope="col">End date</th>
+            <th scope="col">Planned start date</th>
+            <th scope="col">Edited start date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for element in result %}
+                <tr>
+                    <td>{{element["Line code"]}}</td>
+                    <td>{{element["Route code"]}}</td>
+                    <td>{{element["Door number"]}}</td>
+                    <td>{{element["Mission start date"]}}</td>
+                    <td>{{element["Mission end date"]}}</td>
+                    <td>{{element["Planned mission start date"]}}</td>
+                    <td>{{element["Edited mission start date"]}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endif %}
 {% endblock %}

@@ -22,13 +22,29 @@
         </form>
     </div>
 </div>
-{% if result is iterable %}
-    {% for element in result %}
-        <p>{{element}}</p>
-    {% endfor %}
-{% else %}
+{% if message is defined %}
     <div class="d-flex flex-row justify-content-center">
-        <p class="text-danger"><strong>{{result}}</strong></p>
+        <p class="text-danger"><strong>{{message}}</strong></p>
     </div>
+{% endif %}
+{% if result is defined %}
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+            <th scope="col">Day</th>
+            <th scope="col">Line</th>
+            <th scope="col">Number of trips</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for element in result %}
+                <tr>
+                    <td>{{element["Day"]}}</td>
+                    <td>{{element["Line"]}}</td>
+                    <td>{{element["Number of trips"]}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endif %}
 {% endblock %}

@@ -10,9 +10,10 @@ line_service_bp = Blueprint("line_service", __name__, template_folder="templates
 def line_service_handler():
     form = LineServiceForm(request.form)
     if request.method == "POST":
-        result = line_service.main(request.form["line_code"])
-        if type(result) not in [Exception, ValueError, TypeError]:
+        try:
+            result = line_service.main(request.form["line_code"])
             return render_template("line_service.html", form=form, result=result)
-        return render_template("line_service.html", form=form, message=result)
+        except Exception as exc:
+            return render_template("line_service.html", form=form, message=str(exc))
     # not a great approach
-    return render_template("line_service.html", form=form, result=[])
+    return render_template("line_service.html", form=form)

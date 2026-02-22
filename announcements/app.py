@@ -9,9 +9,10 @@ announcements_bp = Blueprint("announcements", __name__, template_folder="templat
 def announcements_handler():
     form = AnnouncementsForm(request.form)
     if request.method == "POST":
-        result = announcements.main(request.form["line_code"])
-        if type(result) not in [Exception, ValueError, TypeError]:
+        try:
+            result = announcements.main(request.form["line_code"])
             return render_template("announcements.html", form=form, result=result)
-        return render_template("announcements.html", form=form, message=result)
+        except Exception as exc:
+            return render_template("announcements.html", form=form, message=str(exc))
     # not a great approach
     return render_template("announcements.html", form=form)

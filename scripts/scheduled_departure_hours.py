@@ -1,4 +1,5 @@
 # Displays scheduled departure hours of given bus line on given weekdays and given direction
+# Removed exception handling mechanism from this script. When an exception is raised, it will be caught on flask app files.
 
 from zeep import Client, Settings
 import json
@@ -8,6 +9,7 @@ from . import line_service
 
 translate_dict = {"SHATKODU": "Line code", "HATADI": "Line name", "SGUZERAH": "Route", "SYON": "Direction", 
                   "SGUNTIPI": "Day type", "GUZERGAH_ISARETI": "Route sign", "SSERVISTIPI": "Service type", "DT": "Time information"}
+day_type_translation = {"I": "Weekday", "C": "Saturday", "P": "Sunday"}
 
 wsdl = "scripts/xml/PlanlananSeferSaati.asmx.xml"
 
@@ -83,31 +85,47 @@ def get_specific_timetables(soap_response_list, user_inputs):
     return outp_buffer
 
 def main(line_code, day, direction="", querying_for_line=False):
-    try:
-        if (querying_for_line):
-            user_inputs = validate_and_format_line_code_day(line_code, day)
-            line_info = line_service.main(line_code)
-            return [line_info[0]["Line name"]]
+    if (querying_for_line):
+        user_inputs = validate_and_format_line_code_day(line_code, day)
+        line_info = line_service.main(line_code)
+        return [line_info[0]["Line name"]]
+    else:
+        user_inputs = validate_and_format_line_code_day(line_code, day)
+
+        line_info = line_service.main(line_code)
+
+        user_inputs["Direction"] = convert_direction_to_G_D(line_info, direction)
+    
+        soap_response = soap_call(user_inputs["Line_Code"])
+
+        soap_response_list = convert_soap_response_to_list(soap_response)
+
+        unique_bus_line_names = obtain_unique_bus_line_names(soap_response_list)
+
+        # print_bus_line_names(unique_bus_line_names)
+                        
+        timetables = get_specific_timetables(soap_response_list, user_inputs)
+
+
+        directions = line_info[0]["Line name"].split("-")
+
+        # Line name is in format Direction 1 - Direction 2
+        # G (gidiş) means we are going to direction 2
+        # D (dönüş) means we are going to direction 1
+
+        # If direction is G (gidiş), set direction value (of each record) to second element of line name
+        if timetables[0]["Direction"] == "G":
+            for element in timetables:
+                element["Direction"] = directions[1]
+
+                # Translate day type to english using dictionary above
+                element["Day type"] = day_type_translation[element["Day type"]]
+        # If direction is D (dönüş), set direction value to first element of line name
         else:
-            user_inputs = validate_and_format_line_code_day(line_code, day)
-
-            line_info = line_service.main(line_code)
-
-            user_inputs["Direction"] = convert_direction_to_G_D(line_info, direction)
-        
-            soap_response = soap_call(user_inputs["Line_Code"])
-
-            soap_response_list = convert_soap_response_to_list(soap_response)
-
-            unique_bus_line_names = obtain_unique_bus_line_names(soap_response_list)
-
-            # print_bus_line_names(unique_bus_line_names)
-                            
-            timetables = get_specific_timetables(soap_response_list, user_inputs)
-            
-            return timetables
-    except Exception as exc:
-        return exc
+            for element in timetables:
+                element["Direction"] = directions[0]
+                element["Day type"] = day_type_translation[element["Day type"]]
+        return timetables
 
 if __name__ == "__main__":
     main()

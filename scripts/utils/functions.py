@@ -82,9 +82,11 @@ def convert_date_to_yyyymmdd(date_input):
     # print(converted_str)
     return converted_str
 
+'''
 def timer(sec, mutex):
     mutex.acquire()
     start = time.time()
     while (time.time() - start < sec):
         pass
     mutex.release()
+'''

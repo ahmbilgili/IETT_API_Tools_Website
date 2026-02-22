@@ -1,4 +1,5 @@
 # Lists announcements for the given bus line
+# If you cannot recover from an exception, no need to catch it.
 
 import zeep
 import json
@@ -36,17 +37,14 @@ def get_specific_bus_lines_announcements(line_code, announcement_list):
 
 def main(line_code):
     global COOLDOWN_SEC
-    try:
-        format_line_code(line_code)
-        announcements_response = soap_call()
-        announcements_response_list = soap_response_to_list(announcements_response)
-        specific_announcements = get_specific_bus_lines_announcements(line_code, announcements_response_list)
-        if len(specific_announcements) == 0:
-            raise Exception("No announcments found!")
-        # helper_functions.print_result(specific_announcements)
-        return specific_announcements
-    except Exception as exc:
-        return exc
+    format_line_code(line_code)
+    announcements_response = soap_call()
+    announcements_response_list = soap_response_to_list(announcements_response)
+    specific_announcements = get_specific_bus_lines_announcements(line_code, announcements_response_list)
+    if len(specific_announcements) == 0:
+        raise Exception("No announcments found!")
+    # helper_functions.print_result(specific_announcements)
+    return specific_announcements
 
 if __name__ == "__main__":
     main()

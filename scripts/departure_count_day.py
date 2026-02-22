@@ -43,18 +43,15 @@ def get_data_of_buses(response_list):
     return output_buffer
 
 def main(date_val):
-    try:
-        helper_functions.validate_date_input(date_val)        
-        
-        soap_response = soap_call(date_val)
+    helper_functions.validate_date_input(date_val)        
 
-        soap_response_list = convert_soap_response_to_list(soap_response)
+    soap_response = soap_call(date_val)
 
-        bus_data = get_data_of_buses(soap_response_list)
-        
-        return bus_data
-    except Exception as exc:
-        return exc
+    soap_response_list = convert_soap_response_to_list(soap_response)
+
+    bus_data = get_data_of_buses(soap_response_list)
+    
+    return bus_data
 
 if __name__ == "__main__":
     main()

@@ -5,7 +5,7 @@ import json
 import lxml.etree
 from .utils import functions as helper_functions
 
-translate_dict = {"HAT_KODU": "Line code", "HAT_ADI": "Line name", "TAM_HAT_ADI": "Complete line name", "HAT_DURUMU": "Line status", "BOLGE": "Region", "SEFER_SURESI": "One-way trip time"}
+translate_dict = {"HAT_KODU": "Line code", "HAT_ADI": "Line name", "TAM_HAT_ADI": "Complete line name", "HAT_DURUMU": "Line status", "BOLGE": "Region", "SEFER_SURESI": "Two-way trip time"}
 wsdl = "scripts/xml/durak_hat_bilgi.xml"
 
 def take_line_code(line_code_input):
@@ -24,15 +24,12 @@ def parse_etree(input_lxml_etree):
     return outp_buffer
 
 def main(line_code):
-    try:
-        line_code = take_line_code(line_code)
-        line_service_response = soap_call(line_code)
-        parsed_response = parse_etree(line_service_response)
-        if len(parsed_response) == 0:
-            raise Exception("No records found for the given line")
-        return parsed_response
-    except Exception as exc:
-        return exc
+    line_code = take_line_code(line_code)
+    line_service_response = soap_call(line_code)
+    parsed_response = parse_etree(line_service_response)
+    if len(parsed_response) == 0:
+        raise Exception("No records found for the given line")
+    return parsed_response
 
 if __name__ == "__main__":
     main() 
