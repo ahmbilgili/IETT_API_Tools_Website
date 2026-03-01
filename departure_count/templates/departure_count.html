@@ -14,7 +14,7 @@
             </div>
         </div>
         <form class="row g-2 d-flex flex-row justify-content-center" style="margin-top: 2px;" method="POST">
-            {{ form.hidden_tag }}
+            {{ form.csrf_token }}
             <div class="col-auto">
                 {{ form.date(placeholder="YYYY-MM-DD") }}
                 <button type="submit" class="btn btn-primary">Search</button>
@@ -39,9 +39,9 @@
         <tbody>
             {% for element in result %}
                 <tr>
-                    <td>{{element["Day"]}}</td>
-                    <td>{{element["Line"]}}</td>
-                    <td>{{element["Number of trips"]}}</td>
+                    <td>{{element[0]}}</td>
+                    <td>{{element[1]}}</td>
+                    <td>{{element[2]}}</td>
                 </tr>
             {% endfor %}
         </tbody>

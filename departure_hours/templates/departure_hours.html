@@ -17,7 +17,7 @@
         </div>
         {% if status == "initial" %}
         <form class="row g-2 d-flex flex-row justify-content-center" style="margin-top: 2px;" method="POST">
-            {{ form.hidden_tag }}
+            {{ form.csrf_token }}
             <div class="col-auto">
                 {{ form.line_code(placeholder="Line Code") }}
                 {{ form.day(placeholder="Day") }}
@@ -32,7 +32,7 @@
         </div>
         
         <form class="row g-2" style="margin-top: 2px;" method="POST">
-            {{ form.hidden_tag }}
+            {{ form.csrf_token }}
             <div class="col-auto" style="margin-top: 2px;">
                 {{ form.line_code(placeholder="Line Code") }}
                 {{ form.day(placeholder="Day") }}
@@ -62,15 +62,26 @@
             </tr>
         </thead>
         <tbody>
-            {% for element in result %}
-                <tr>
-                    <td>{{element["Line code"]}}</td>
-                    <td>{{element["Line name"]}}</td>
-                    <td>{{element["Route"]}}</td>
-                    <td>{{element["Direction"]}}</td>
-                    <td>{{element["Day type"]}}</td>
-                    <td>{{element["Time information"]}}</td>
-                </tr>
+            {% for element in result[0] %}
+                {% if result[1] == loop.index0 %}
+                    <tr class="table-success">
+                        <td>{{element["Line code"]}}</td>
+                        <td>{{element["Line name"]}}</td>
+                        <td>{{element["Route"]}}</td>
+                        <td>{{element["Direction"]}}</td>
+                        <td>{{element["Day type"]}}</td>
+                        <td>{{element["Time information"]}}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td>{{element["Line code"]}}</td>
+                        <td>{{element["Line name"]}}</td>
+                        <td>{{element["Route"]}}</td>
+                        <td>{{element["Direction"]}}</td>
+                        <td>{{element["Day type"]}}</td>
+                        <td>{{element["Time information"]}}</td>
+                    </tr>
+                {% endif %}
             {% endfor %}
         </tbody>
     </table>

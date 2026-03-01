@@ -10,7 +10,7 @@ import sys
 
 wsdl = "https://api.ibb.gov.tr/iett/UlasimDinamikVeri/Duyurular.asmx?wsdl"
 
-translate_dict = {"HATKODU": "Line Code", "HAT": "Line", "TIP": "Type", "GUNCELLEME_SAATI": "Update Time", "MESAJ": "Message"}
+translate_dict = {"HATKODU": "Line code", "HAT": "Line", "TIP": "Type", "GUNCELLEME_SAATI": "Update Time", "MESAJ": "Message"}
 
 def format_line_code(line_code_input):
     line_code = helper_functions.special_char_upper_func(line_code_input)

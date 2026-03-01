@@ -10,10 +10,11 @@ archive_bp = Blueprint("archive", __name__, template_folder="templates")
 def archive_handler():
     form = ArchiveForm(request.form)
     if request.method == "POST":
-        try:
-            result = archive.main(request.form["date"], request.form["line_code"])
-            return render_template("archive.html", form=form, result=result)
-        except Exception as exc:
-            return render_template("archive.html", form=form, message=str(exc))
+        if form.validate_on_submit():
+            try:
+                result = archive.main(request.form["date"], request.form["line_code"])
+                return render_template("archive.html", form=form, result=result)
+            except Exception as exc:
+                return render_template("archive.html", form=form, message=str(exc))
     # not a great approach
     return render_template("archive.html", form=form)
