@@ -8,7 +8,20 @@ import zeep
 import json
 from datetime import date, timedelta
 from .utils import functions as helper_functions
-from sqlalchemy import create_engine, text
+import mysql.connector
+import boto3
+from dotenv import load_dotenv
+import os
+from config import DEV_ENV, CERT_PATH
+
+if DEV_ENV:
+    # Loads config file from parent dir
+    load_dotenv(dotenv_path=".../config.env")
+else:
+    # Loads config file from current dir (app)
+    load_dotenv(dotenv_path="../config.env")
+
+VIEWER_PASSWORD = os.getenv("MARIADB_VIEWER_PASSWORD")
 
 wsdl = "https://api.ibb.gov.tr/iett/ibb/ibb360.asmx?wsdl"
 
@@ -49,14 +62,22 @@ def get_data_of_buses(response_list):
 '''
 
 def get_departure_hours_from_DB(date_val):
-    connection = create_engine(f"mariadb+mariadbconnector://departure_count_viewer:@172.17.0.3:3306/iett_website_db", echo=True)
-    with connection.connect() as conn:
         try:
+            connection = mysql.connector.connect(
+            host='iett-website-db.cna0uuks61sx.eu-north-1.rds.amazonaws.com',
+            port=3306,
+            database='iett_website_db',
+            user='viewer',
+            password=VIEWER_PASSWORD,
+            ssl_disabled=False,
+            ssl_ca= f"{CERT_PATH}/global-bundle.pem"
+            )
+            cursor = connection.cursor()
             date_val += " 00:00:00"
-            result = conn.execute(text("SELECT date, line, departure_count FROM departure_counts WHERE date=:date"), {"date": date_val})
-            return result.all()
-        except:
-            pass
+            cursor.execute("SELECT date, line, departure_count FROM departure_counts WHERE date=%s", [date_val])
+            return cursor.fetchall()
+        except mysql.connector.errors.Error as err:
+            raise Exception(err)
 
 def main(date_val):
     helper_functions.validate_date_input(date_val)        
@@ -68,8 +89,9 @@ def main(date_val):
 
     bus_data = get_data_of_buses(soap_response_list)
     '''
-    result = get_departure_hours_from_DB(date_val)
     
+    result = get_departure_hours_from_DB(date_val)
+
     if len(result) == 0:
         raise Exception("No data found!")
     
