@@ -2,7 +2,7 @@
 # If the user asks for a specific bus line, (considering it's in top 50), only information regarding that bus line is displayed instead.
 
 # Calls the mariaDB database to fetch records instead of sending a request to SOAP API
-# For fetching results from the server, check departure_count_day_SOAP_caller.py
+# For fetching results from the server, check passenger_count_day_SOAP_caller.py
 
 import zeep
 import json
@@ -61,7 +61,7 @@ def get_data_of_buses(response_list):
     return output_buffer
 '''
 
-def get_departure_hours_from_DB(date_val):
+def get_passenger_counts_from_DB(date_val):
         try:
             connection = mysql.connector.connect(
             host='iett-website-db.cna0uuks61sx.eu-north-1.rds.amazonaws.com',
@@ -90,7 +90,7 @@ def main(date_val):
     bus_data = get_data_of_buses(soap_response_list)
     '''
     
-    result = get_departure_hours_from_DB(date_val)
+    result = get_passenger_counts_from_DB(date_val)
 
     if len(result) == 0:
         raise Exception("No data found!")
