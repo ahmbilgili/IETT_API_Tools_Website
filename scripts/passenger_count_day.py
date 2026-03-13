@@ -12,7 +12,8 @@ import mysql.connector
 import boto3
 from dotenv import load_dotenv
 import os
-from config import DEV_ENV, CERT_PATH
+from config import DEV_ENV
+from sshtunnel import SSHTunnelForwarder
 
 if DEV_ENV:
     # Loads config file from parent dir
@@ -21,7 +22,13 @@ else:
     # Loads config file from current dir (app)
     load_dotenv(dotenv_path="../config.env")
 
+GLOBAL_CERT_PATH = os.getenv("GLOBAL_CERT_PATH")
 VIEWER_PASSWORD = os.getenv("MARIADB_VIEWER_PASSWORD")
+SSH_TUNNEL_HOST = os.getenv("SSH_TUNNEL_HOST")
+SSH_PKEY_FILE_PATH=os.getenv("SSH_PKEY_PATH")
+REMOTE_DB_ADDRESS = os.getenv("REMOTE_DB_ADDRESS")
+REMOTE_DB_PORT = os.getenv("REMOTE_DB_PORT")
+SSH_USERNAME = os.getenv("SSH_USERNAME")
 
 wsdl = "https://api.ibb.gov.tr/iett/ibb/ibb360.asmx?wsdl"
 
@@ -63,19 +70,28 @@ def get_data_of_buses(response_list):
 
 def get_passenger_counts_from_DB(date_val):
         try:
-            connection = mysql.connector.connect(
-            host='iett-website-db.cna0uuks61sx.eu-north-1.rds.amazonaws.com',
-            port=3306,
-            database='iett_website_db',
-            user='viewer',
-            password=VIEWER_PASSWORD,
-            ssl_disabled=False,
-            ssl_ca= f"{CERT_PATH}/global-bundle.pem"
-            )
-            cursor = connection.cursor()
-            date_val += " 00:00:00"
-            cursor.execute("SELECT date, line, departure_count FROM departure_counts WHERE date=%s", [date_val])
-            return cursor.fetchall()
+            with SSHTunnelForwarder(
+                ssh_address_or_host=(os.getenv("SSH_TUNNEL_HOST"), 22),
+                ssh_pkey=os.getenv("SSH_PKEY_PATH"),
+                ssh_username=os.getenv("SSH_USERNAME"),
+                remote_bind_address=(os.getenv("REMOTE_DB_ADDRESS"), int(os.getenv("REMOTE_DB_PORT"))),
+                local_bind_address=("localhost", int(os.getenv("REMOTE_DB_PORT")))
+            ) as ssh_tunnel:
+                ssh_tunnel.start()
+                connection = mysql.connector.connect(
+                host="localhost",
+                port=int(os.getenv("REMOTE_DB_PORT")),
+                database='iett_website_db',
+                user='viewer',
+                password=os.getenv("MARIADB_VIEWER_PASSWORD"),
+                ssl_disabled=False,
+                ssl_ca= os.getenv("GLOBAL_CERT_PATH")
+                )
+                cursor = connection.cursor()
+                date_val += " 00:00:00"
+                cursor.execute("SELECT date, line, departure_count FROM departure_counts WHERE date=%s", [date_val])
+                result = cursor.fetchall()
+                return result
         except mysql.connector.errors.Error as err:
             raise Exception(err)
 
