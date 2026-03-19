@@ -8,10 +8,10 @@ from .utils import functions as helper_functions
 
 wsdl = "https://api.ibb.gov.tr/iett/ibb/ibb360.asmx?wsdl"
 
-translate_dict = {"ID": "Id", "NARSIVGOREVID": "Archive task ID", "NKAYITGUNU": "Action date", "SHATKODU": "Line code",
-                  "SGUZERGAHKODU": "Route code", "SKAPINUMARA": "Door number", "DTBASLAMAZAMANI": "Mission start date", "DTBITISZAMANI": "Mission end date",
-                  "SGOREVDURUM": "Mission status", "NGOREVID": "Mission ID", "DTPLANLANANBASLANGICZAMANI": "Planned mission start date", 
-                  "DTDUZENLENENBASLANGICZAMANI": "Edited mission start date"}
+translate_dict = {"ID": "Id", "NARSIVGOREVID": "Archive task ID", "NKAYITGUNU": "Action date", "SHATKODU": "line_code",
+                  "SGUZERGAHKODU": "route_code", "SKAPINUMARA": "door_number", "DTBASLAMAZAMANI": "start_date", "DTBITISZAMANI": "end_date",
+                  "SGOREVDURUM": "Mission status", "NGOREVID": "Mission ID", "DTPLANLANANBASLANGICZAMANI": "planned_start_date", 
+                  "DTDUZENLENENBASLANGICZAMANI": "edited_start_date"}
 
 def soap_call(date):
     client = zeep.Client(wsdl=wsdl)
@@ -51,5 +51,5 @@ def main(date_val):
     response = soap_call(date_val)
 
     response_parsed = parse_xml(response)
-
+    
     return response_parsed

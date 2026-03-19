@@ -12,23 +12,16 @@ import mysql.connector
 import boto3
 from dotenv import load_dotenv
 import os
-from config import DEV_ENV
 from sshtunnel import SSHTunnelForwarder
 
+'''
 if DEV_ENV:
     # Loads config file from parent dir
-    load_dotenv(dotenv_path=".../config.env")
+    load_dotenv(dotenv_path="../config.env")
 else:
     # Loads config file from current dir (app)
-    load_dotenv(dotenv_path="../config.env")
-
-GLOBAL_CERT_PATH = os.getenv("GLOBAL_CERT_PATH")
-VIEWER_PASSWORD = os.getenv("MARIADB_VIEWER_PASSWORD")
-SSH_TUNNEL_HOST = os.getenv("SSH_TUNNEL_HOST")
-SSH_PKEY_FILE_PATH=os.getenv("SSH_PKEY_PATH")
-REMOTE_DB_ADDRESS = os.getenv("REMOTE_DB_ADDRESS")
-REMOTE_DB_PORT = os.getenv("REMOTE_DB_PORT")
-SSH_USERNAME = os.getenv("SSH_USERNAME")
+    load_dotenv(dotenv_path="/app/config.env")
+'''
 
 wsdl = "https://api.ibb.gov.tr/iett/ibb/ibb360.asmx?wsdl"
 

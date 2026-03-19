@@ -5,6 +5,10 @@ import os
 import lxml
 import datetime
 from .utils import functions as helper_functions
+from sshtunnel import SSHTunnelForwarder
+import mysql.connector
+from sqlalchemy import create_engine, text
+from sqlalchemy.orm import Session
 
 wsdl = "https://api.ibb.gov.tr/iett/ibb/ibb360.asmx?wsdl"
 
@@ -42,20 +46,55 @@ def get_specific_bus_line_data(table_list, bus_line_code):
                 bus_line_data.append(table)
     return bus_line_data
 
+def get_archive_records_from_DB(bus_line, date_val):
+        try:
+            with SSHTunnelForwarder(
+                ssh_address_or_host=(os.getenv("SSH_TUNNEL_HOST"), 22),
+                ssh_pkey=os.getenv("SSH_PKEY_PATH"),
+                ssh_username=os.getenv("SSH_USERNAME"),
+                remote_bind_address=(os.getenv("REMOTE_DB_ADDRESS"), int(os.getenv("REMOTE_DB_PORT"))),
+                local_bind_address=("localhost", int(os.getenv("REMOTE_DB_PORT")))
+            ) as ssh_tunnel:
+                ssh_tunnel.start()
+                connection = mysql.connector.connect(
+                host="localhost",
+                port=int(os.getenv("REMOTE_DB_PORT")),
+                database='iett_website_db',
+                user='viewer',
+                password=os.getenv("MARIADB_VIEWER_PASSWORD"),
+                ssl_disabled=False,
+                ssl_ca= os.getenv("GLOBAL_CERT_PATH")
+                )
+                cursor = connection.cursor()
+                cursor.execute("SELECT line_code, route_code, door_number, start_date, end_date, planned_start_date, edited_start_date FROM archive WHERE line_code = %s AND planned_start_date LIKE %s", [bus_line, f"%{date_val}%"])
+                print("eee")
+                return cursor.fetchall()
+        except mysql.connector.errors.Error as err:
+            raise Exception(err)
+
 def main(date, bus_line):
     helper_functions.validate_date_input(date)
     helper_functions.validate_line_code(bus_line)
 
     # API Call expects date of format yyyy-mm-dd
+    '''
     date = helper_functions.convert_date_to_yyyymmdd(date)
-
+    '''
+    
+    '''
     response = soap_call(date)
 
     response_parsed = parse_xml(response)
+    '''
 
     bus_line = helper_functions.special_char_upper_func(bus_line)
 
+    '''
     specific_bus_line_data = get_specific_bus_line_data(response_parsed, bus_line)
+    '''
+
+    specific_bus_line_data = get_archive_records_from_DB(bus_line, date)
+
     if len(specific_bus_line_data) == 0:
         raise Exception("No logs found!")
 

@@ -45,13 +45,13 @@
         <tbody>
             {% for element in result %}
                 <tr>
-                    <td>{{element["Line code"]}}</td>
-                    <td>{{element["Route code"]}}</td>
-                    <td>{{element["Door number"]}}</td>
-                    <td>{{element["Mission start date"]}}</td>
-                    <td>{{element["Mission end date"]}}</td>
-                    <td>{{element["Planned mission start date"]}}</td>
-                    <td>{{element["Edited mission start date"]}}</td>
+                    <td>{{element[0]}}</td>
+                    <td>{{element[1]}}</td>
+                    <td>{{element[2]}}</td>
+                    <td>{{element[3]}}</td>
+                    <td>{{element[4]}}</td>
+                    <td>{{element[5]}}</td>
+                    <td>{{element[6]}}</td>
                 </tr>
             {% endfor %}
         </tbody>
