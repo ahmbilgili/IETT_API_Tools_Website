@@ -32,14 +32,12 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4 # More information on this action can be found below in the 'AWS Credentials' section
         with:
-          role-to-assume: arn:aws:iam::607684260657:role/ECRAccessRole
-          aws-region: eu-north-1
+            role-to-assume: arn:aws:iam::607684260657:role/ECRAccessRole
+            aws-region: eu-north-1
 
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
-        with:
-          registries: ${{ inputs.aws_account_id }}
 
       - name: Build, tag, and push image to Amazon ECR
         id: build-publish
