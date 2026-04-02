@@ -1,4 +1,7 @@
 name: build-docker-image
+permissions:
+  id-token: write   # Required for OIDC
+  contents: read    # Required for actions/checkout
 on:
   workflow_dispatch:
     inputs:
