@@ -49,8 +49,7 @@
                 
             </div>
         </form>
-</div>
-{% if result is defined %}
+    {% if result is defined %}
     <table class="table table-bordered table-hover">
         <thead>
             <tr>
@@ -69,5 +68,6 @@
             {% endfor %}
         </tbody>
     </table>
-{% endif %}
+    {% endif %}
+</div>
 {% endblock %}

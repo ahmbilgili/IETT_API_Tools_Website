@@ -13,10 +13,9 @@
 # -f sets the location of dockerfile, so that you can work in your current context (.) instead of context ./app
 FROM python:3.15.0a5-alpine3.23
 
-COPY ./app ./requirements.txt ./prod.env ./app
-COPY ./certs ./app/certs
-COPY ./keys ./app/keys
-RUN apk update && apk add build-base && apk add libxml2-dev libxslt-dev libffi-dev
+COPY . ./app
+RUN apk update && apk add build-base && apk add libxml2-dev libxslt-dev libffi-dev zlib-dev jpeg-dev musl-dev py3-pillow freetype-dev
+RUN pip install --upgrade pip setuptools wheel
 RUN pip install -r app/requirements.txt
 ENV IN_PROD=True
 WORKDIR app

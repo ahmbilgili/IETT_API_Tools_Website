@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 import os
-load_dotenv(dotenv_path="../dev_cloudtest.env")
+load_dotenv(dotenv_path="prod.env")
 
 
 class Config:
