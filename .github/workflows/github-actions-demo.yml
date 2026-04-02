@@ -3,8 +3,6 @@ permissions:
   id-token: write   # Required for OIDC
   contents: read    # Required for actions/checkout
 
-env:
-  ECR_REPO_NAME: ${{ vars.ECR_REPO_NAME }}
 on:
   workflow_dispatch:
     inputs:
@@ -47,7 +45,7 @@ jobs:
         shell: bash
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{ env.ECR_REPO_NAME }}
+          ECR_REPOSITORY: ${{ vars.ECR_REPO_NAME }}
           IMAGE_TAG: ${{ inputs.image_tag }}
         run: |
           docker build "${{ inputs.docker_build_dir }}" -f "${{ inputs.path_to_dockerfile }}" -t "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
