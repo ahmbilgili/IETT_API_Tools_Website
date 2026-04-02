@@ -166,8 +166,6 @@ def main(line_code, day, direction="", querying_for_line=False):
                 element["Day type"] = day_type_translation[element["Day type"]]
 
         closest_time_index = find_closest_time_index_positive(timetables)
-        print(closest_time_index)
-        print(timetables[0])
         return (timetables, closest_time_index)
 
 if __name__ == "__main__":

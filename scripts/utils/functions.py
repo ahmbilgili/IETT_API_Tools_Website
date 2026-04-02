@@ -1,5 +1,8 @@
 import time
 import datetime
+import random
+import base64
+from captcha.image import ImageCaptcha
 
 # to convert some of the turkish lowercase characters to their corresponding upper case pairs
 def special_char_upper_func(param):
@@ -81,6 +84,18 @@ def convert_date_to_yyyymmdd(date_input):
     converted_str = str(date_input[0]) + str(date_input[1]) + str(date_input[2])
     # print(converted_str)
     return converted_str
+
+def generate_captcha():
+    image = ImageCaptcha()
+    code = ""
+    for i in range(4):
+        character_type = random.randint(0, 1)
+        if character_type == 0:
+            code += chr(random.randint(97, 122))
+        else:
+            code += chr(random.randint(48, 57))
+    base64_captcha = base64.b64encode(image.generate(code, bg_color=(255, 255, 255)).getvalue()).decode("utf-8")
+    return code, base64_captcha
 
 '''
 def timer(sec, mutex):

@@ -41,7 +41,7 @@ def main(line_code):
     announcements_response_list = soap_response_to_list(announcements_response)
     specific_announcements = get_specific_bus_lines_announcements(line_code, announcements_response_list)
     if len(specific_announcements) == 0:
-        raise Exception("No announcments found!")
+        raise Exception("No announcements found!")
     
     return specific_announcements
 if __name__ == "__main__":

@@ -8,27 +8,50 @@
 <div class="d-flex flex-row justify-content-center">
     <div class="form-div d-flex flex-column">
         <h1 class="d-flex flex-row justify-content-center" style="margin-top: 2px;"><strong>Line Service</strong></h1>
-        <div class="card bg-light" style="width: 35rem;">
+        <div class="card bg-light">
             <div class="card-body">
                 <p>This service displays information about given line.</p>
                 <p>Field expects line code.</p> 
                 <p>Leave the field empty to see all lines.</p>
             </div>
         </div>
-        <form class="row g-2 d-flex flex-row justify-content-center" style="margin-top: 2px;" method="POST">
+        <form class="container mt-2 mb-5" method="POST">
             {{ form.csrf_token }}
-            <div class="col-auto">
-                {{ form.line_code(placeholder="Line Code")}}
-                <button type="submit" class="btn btn-primary">Search</button>
+            
+            <div class="mx-auto" style="max-width: 550px;">
+                
+                <div class="row g-2 mb-2">
+                    <div class="col-12">
+                        {{ form.line_code(placeholder="Line Code", class="form-control w-100") }}
+                    </div>
+                </div>
+
+                <div class="row g-2 align-items-center">
+                    <div class="col-auto">
+                        <img src="data:image/png;base64,{{ captcha }}" alt="CAPTCHA">
+                    </div>
+                    
+                    <div class="col">
+                        {{ form.captcha(placeholder="Enter captcha", class="form-control") }}
+                    </div>
+                    
+                    <div class="col-auto">
+                        <button class="btn btn-primary px-4" type="submit">
+                            Search
+                        </button>
+                    </div>
+                </div>
+                {% if message is defined %}
+                    <div class="row mt-2">
+                        <div class="col-12 text-center">
+                            <p class="text-danger"><strong>{{message}}</strong></p>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
         </form>
     </div>
 </div>
-{% if message is defined %}
-    <div class="d-flex flex-row justify-content-center">
-        <p class="text-danger mx-auto"><strong>{{message}}</strong></p>
-    </div>
-{% endif %}
 {% if result is defined %}
     <table class="table table-bordered table-hover">
         <thead>

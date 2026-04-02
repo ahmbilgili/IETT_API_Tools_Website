@@ -7,7 +7,7 @@
 <div class="d-flex flex-row justify-content-center">
     <div class="form-div d-flex flex-column justify-content-center">
         <h1 class="d-flex flex-row justify-content-center" style="margin-top: 2px;"><strong>Departure Hours</strong></h1>
-        <div class="card bg-light d-flex flex-row justify-content-center" style="width: 35rem;">
+        <div class="card bg-light d-flex flex-row justify-content-center">
             <div class="card-body">
                 <p>This service displays information about departure hours of the given line.</p>
                 <p>First field expects line code.</p> 
@@ -16,38 +16,80 @@
             </div>
         </div>
         {% if status == "initial" %}
-        <form class="row g-2 d-flex flex-row justify-content-center" style="margin-top: 2px;" method="POST">
+        <form class="container mt-2 mb-5" method="POST">
             {{ form.csrf_token }}
-            <div class="col-auto">
-                {{ form.line_code(placeholder="Line Code") }}
-                {{ form.day(placeholder="Day") }}
-                <button type="submit" class="btn btn-primary">Search</button>
+            <div class="mx-auto" style="max-width: 650px;">
+                <div class="row g-2 align-items-center">
+                    <div class="col">
+                        {{ form.line_code(placeholder="Line Code", class="form-control") }}
+                    </div>
+                    <div class="col">
+                        {{ form.day(placeholder="Day", class="form-control") }}
+                    </div>
+                    <div class="col-auto">
+                        <button class="btn btn-primary px-4" type="submit" style="border-radius: 0.375rem;">
+                            Search
+                        </button> 
+                    </div>
+                </div>
+
+                {% if message is defined %}
+                    <div class="row mt-2 text-center">
+                        <div class="col-12"><p class="text-danger"><strong>{{message}}</strong></p></div>
+                    </div>
+                {% endif %}
             </div>
         </form>
+
         {% else %}
-        <div class="card bg-light d-flex flex-row justify-content-center" style="width: 35rem;">
-            <div class="card-body">
-                <p>Line chosen: {{line_info}}</p>
+        <div class="mx-auto mb-3" style="max-width: 700px;">
+            <div class="card bg-light border-0">
+                <div class="card-body py-2 text-center">
+                    <p class="mb-0">Line chosen: <strong>{{line_info}}</strong></p>
+                </div>
             </div>
         </div>
-        
-        <form class="row g-2" style="margin-top: 2px;" method="POST">
+
+        <form class="container mt-2 mb-5" method="POST">
             {{ form.csrf_token }}
-            <div class="col-auto" style="margin-top: 2px;">
-                {{ form.line_code(placeholder="Line Code") }}
-                {{ form.day(placeholder="Day") }}
-                {{ form.direction(placeholder="Direction") }}
-                <button type="submit" class="btn btn-primary">Search</button>
+            <div class="mx-auto" style="max-width: 700px;">
+                <div class="row g-2 mb-2">
+                    <div class="col">
+                        {{ form.line_code(placeholder="Line Code", class="form-control") }}
+                    </div>
+                    <div class="col">
+                        {{ form.day(placeholder="Day", class="form-control") }}
+                    </div>
+                    <div class="col">
+                        {{ form.direction(placeholder="Direction", class="form-control") }}
+                    </div>
+                    <div class="col-auto">
+                        <button class="btn btn-primary px-4" type="submit" style="border-radius: 0.375rem;">
+                            Search
+                        </button>
+                    </div>
+                </div>
+
+                <div class="row g-2 align-items-center">
+                    <div class="col-auto">
+                        <img src="data:image/png;base64,{{ captcha }}" alt="CAPTCHA" 
+                            style="height: 65px; border-radius: 0.375rem; display: block;">
+                    </div>
+                    <div class="col">
+                        {{ form.captcha(placeholder="Enter captcha", class="form-control") }}
+                    </div>
+                </div>
+
+                {% if message is defined %}
+                    <div class="row mt-2 text-center">
+                        <div class="col-12"><p class="text-danger small"><strong>{{message}}</strong></p></div>
+                    </div>
+                {% endif %}
             </div>
         </form>
         {% endif %}
     </div>
 </div>
-{% if message is defined %}
-    <div class="d-flex flex-row justify-content-center">
-        <p class="text-danger mx-auto"><strong>{{message}}</strong></p>
-    </div>
-{% endif %}
 {% if result is defined %}
     <table class="table table-bordered table-hover">
         <thead>

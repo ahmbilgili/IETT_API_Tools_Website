@@ -1,8 +1,9 @@
-from flask import Flask, request, render_template, Blueprint
+from flask import Flask, request, render_template, Blueprint, session
 from .forms import LineServiceForm
 import sys
 import threading
 from scripts import line_service
+from scripts.utils.functions import generate_captcha
 
 line_service_bp = Blueprint("line_service", __name__, template_folder="templates")
 
@@ -12,9 +13,17 @@ def line_service_handler():
     if request.method == "POST":
         if form.validate_on_submit():
             try:
+                if request.form["captcha"] != session["captcha_code"]:
+                    raise Exception("Incorrect captcha!")
+                # generate new captcha
+                captcha_code, captcha_data = generate_captcha()
+                session["captcha_code"] = captcha_code
                 result = line_service.main(request.form["line_code"])
-                return render_template("line_service.html", form=form, result=result)
+                return render_template("line_service.html", form=form, result=result, captcha=captcha_data)
             except Exception as exc:
-                return render_template("line_service.html", form=form, message=str(exc))
-    # not a great approach
-    return render_template("line_service.html", form=form)
+                captcha_code, captcha_data = generate_captcha()
+                session["captcha_code"] = captcha_code
+                return render_template("line_service.html", form=form, message=str(exc), captcha=captcha_data)
+    captcha_code, captcha_data = generate_captcha()
+    session["captcha_code"] = captcha_code
+    return render_template("line_service.html", form=form, captcha=captcha_data)
