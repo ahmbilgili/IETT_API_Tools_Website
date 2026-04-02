@@ -1,24 +1,25 @@
 name: build-docker-image
-on: push
-jobs:
-  inputs:
-    path_to_dockerfile:
-      description: Path to the dockerfile (default = 'Dockerfile')
-      default: "./Dockerfile"
-      type: string
-    docker_build_dir:
-      description: Docker build directory (default = '.')
-      default: "."
-      type: string
-    image_tag:
-      description: Tag to apply to images.
-      type: string
-      default: iett-website-image
-    aws_account_id:
-        description: AWS Account ID
+on:
+  workflow_dispatch:
+    inputs:
+      path_to_dockerfile:
+        description: Path to the dockerfile (default = 'Dockerfile')
+        default: "./Dockerfile"
         type: string
-        default: 6076-8426-0657
+      docker_build_dir:
+        description: Docker build directory (default = '.')
+        default: "."
+        type: string
+      image_tag:
+        description: Tag to apply to images.
+        type: string
+        default: iett-website-image
+      aws_account_id:
+          description: AWS Account ID
+          type: string
+          default: 6076-8426-0657
 
+jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
