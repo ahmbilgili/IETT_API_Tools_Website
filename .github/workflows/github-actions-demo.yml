@@ -9,11 +9,11 @@ on:
     inputs:
       path_to_dockerfile:
         description: Path to the dockerfile (default = 'Dockerfile')
-        default: "./app/Dockerfile"
+        default: "./Dockerfile"
         type: string
       docker_build_dir:
         description: Docker build directory (default = '.')
-        default: ".."
+        default: "."
         type: string
       image_tag:
         description: Tag to apply to images.
