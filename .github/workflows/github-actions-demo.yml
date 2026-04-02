@@ -1,5 +1,5 @@
 name: build-docker-image
-on: [push]
+on: push
 jobs:
   inputs:
     path_to_dockerfile:
