@@ -2,6 +2,9 @@ name: build-docker-image
 permissions:
   id-token: write   # Required for OIDC
   contents: read    # Required for actions/checkout
+
+env:
+  ECR_REPO_NAME: ${{ vars.ECR_REPO_NAME }}
 on:
   workflow_dispatch:
     inputs:
