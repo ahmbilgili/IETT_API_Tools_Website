@@ -24,6 +24,10 @@ def line_service_handler():
                 captcha_code, captcha_data = generate_captcha()
                 session["captcha_code"] = captcha_code
                 return render_template("line_service.html", form=form, message=str(exc), captcha=captcha_data)
+        else:
+            captcha_code, captcha_data = generate_captcha()
+            session["captcha_code"] = captcha_code
+            return render_template("line_service.html", form=form, message=form.errors.values(), captcha=captcha_data)
     captcha_code, captcha_data = generate_captcha()
     session["captcha_code"] = captcha_code
     return render_template("line_service.html", form=form, captcha=captcha_data)

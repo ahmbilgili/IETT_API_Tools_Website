@@ -33,5 +33,9 @@ def departure_hours_handler():
                 except Exception as exc:
                     # An exception was returned as a result, so don't enable the direction field.
                     return render_template("departure_hours.html", form=form, status="initial", message=str(exc))
+        else:
+            captcha_code, captcha_data = generate_captcha()
+            session["captcha_code"] = captcha_code
+            return render_template("departure_hours.html", form=form, message=form.errors.values(), captcha=captcha_data)
     # GET request, show line code and day field only. Don't show direction yet.
     return render_template("departure_hours.html", form=form, status="initial")

@@ -19,14 +19,15 @@ def announcements_handler():
                 captcha_code, captcha_data = generate_captcha()
                 session["captcha_code"] = captcha_code
                 result = announcements.main(request.form["line_code"])
-                print("Successful POST request, ", session["captcha_code"])
                 return render_template("announcements.html", form=form, result=result, captcha=captcha_data)
             except Exception as exc:
                 captcha_code, captcha_data = generate_captcha()
                 session["captcha_code"] = captcha_code
-                print("Failed POST request, ", session["captcha_code"])
                 return render_template("announcements.html", form=form, message=str(exc), captcha=captcha_data)
+        else:
+            captcha_code, captcha_data = generate_captcha()
+            session["captcha_code"] = captcha_code
+            return render_template("announcements.html", form=form, message=form.errors.values(), captcha=captcha_data)
     captcha_code, captcha_data = generate_captcha()
     session["captcha_code"] = captcha_code
-    print("GET request, ", session["captcha_code"])
     return render_template("announcements.html", form=form, captcha=captcha_data)

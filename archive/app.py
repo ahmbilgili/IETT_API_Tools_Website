@@ -15,7 +15,6 @@ def archive_handler():
             try:
                 if request.form["captcha"] != session["captcha_code"]:
                     raise Exception("Incorrect captcha!")
-                
                 captcha_code, captcha_data = generate_captcha()
                 session["captcha_code"] = captcha_code
                 result = archive.main(request.form["date"], request.form["line_code"])
@@ -24,6 +23,10 @@ def archive_handler():
                 captcha_code, captcha_data = generate_captcha()
                 session["captcha_code"] = captcha_code
                 return render_template("archive.html", form=form, message=str(exc), captcha=captcha_data)
+        else:
+            captcha_code, captcha_data = generate_captcha()
+            session["captcha_code"] = captcha_code
+            return render_template("archive.html", form=form, message=form.errors.values(), captcha=captcha_data)
     captcha_code, captcha_data = generate_captcha()
     session["captcha_code"] = captcha_code
     return render_template("archive.html", form=form, captcha=captcha_data)

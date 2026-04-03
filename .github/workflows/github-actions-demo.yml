@@ -31,8 +31,7 @@ jobs:
       - name: Display workdir
         run: |
           echo ${GITHUB_WORKSPACE}
-          ls ${GITHUB_WORKSPACE}
-
+          
       - name: Checkout repo
         uses: actions/checkout@v4
 

@@ -23,7 +23,11 @@ def passenger_count_day_handler():
             except Exception as exc:
                 captcha_code, captcha_data = generate_captcha()
                 session["captcha_code"] = captcha_code
-                return render_template("passenger_count.html", form=form, message=str(exc), captcha=captcha_data)
+                return render_template("passenger_count.html", form=form, message=str(exc), captcha=captcha_data)    
+        else:
+            captcha_code, captcha_data = generate_captcha()
+            session["captcha_code"] = captcha_code
+            return render_template("passenger_count.html", form=form, message=form.errors.values(), captcha=captcha_data)        
     captcha_code, captcha_data = generate_captcha()
     session["captcha_code"] = captcha_code
     return render_template("passenger_count.html", form=form, captcha=captcha_data)
