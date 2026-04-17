@@ -8,3 +8,4 @@ line_service/__pycache__/*
 prod.env
 certs
 keys
+__pycache__/*
