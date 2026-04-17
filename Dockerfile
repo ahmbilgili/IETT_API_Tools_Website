@@ -8,7 +8,7 @@
 
 
 
-# docker build -t iett_api_website --platform=linux/amd64 -f app/Dockerfile .
+# docker build -t iett_api_website --platform=linux/amd64 -f Dockerfile .
 # --platform sets the platform to amd64
 # -f sets the location of dockerfile, so that you can work in your current context (.) instead of context ./app
 FROM python:3.15.0a5-alpine3.23
