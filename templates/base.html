@@ -24,9 +24,14 @@
         </ul>
       </div>
   </nav>
-  <!-- Replace the variables below. -->
   {% block head %}{% endblock %}
 </head>
 <section class="content">
   {% block content %}{% endblock %}
+  <div class="position-fixed bottom-0 end-0 m-3 d-flex flex-column align-items-end">
+      <p class="mb-2 justify-content-center">Version 1.1</p>
+      <button type="submit" class="btn btn-secondary px-4">
+          <a class="nav-link link-light" href="feedback" style="padding: 0;">Give a feedback</a>
+      </button>
+  </div>
 </section>

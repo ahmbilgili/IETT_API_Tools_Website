@@ -23,6 +23,10 @@ on:
           description: AWS Account ID
           type: string
           default: 6076-8426-0657
+      ecr_repo_name:
+          description: ECR Repo Name
+          type: string
+          default: project_repo
 
 jobs:
   build_image:
@@ -45,21 +49,18 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build, tag, and push image to Amazon ECR
+      - name: Build, tag and push the image
         id: build-publish
         shell: bash
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{ vars.ECR_REPO_NAME }}
+          ECR_REPOSITORY: ${{ inputs.ecr_repo_name }}
           IMAGE_TAG: ${{ inputs.image_tag }}
         run: |
-          docker build "${{ inputs.docker_build_dir }}" -f "${{ inputs.path_to_dockerfile }}" -t "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" --platform=linux/amd64
-          echo "image_tag=$IMAGE_TAG" 
-          echo "full_image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-  push_image_to_ecr:
-    runs-on: ubuntu-latest
-    steps:
-      - name: push-to-ecr
-        run: |
+          docker build "${{ inputs.docker_build_dir }}" -f "${{ inputs.path_to_dockerfile }}" -t "$IMAGE_TAG" --platform=linux/amd64
+          echo "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          docker image ls
+          docker tag "$IMAGE_TAG" "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
           docker push "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
           echo "IMAGE $IMAGE_TAG is pushed to $ECR_REGISTRY/$ECR_REPOSITORY"
+
