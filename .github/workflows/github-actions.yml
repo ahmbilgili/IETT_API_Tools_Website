@@ -23,11 +23,6 @@ on:
           description: AWS Account ID
           type: string
           default: 6076-8426-0657
-      ecr_repo_name:
-          description: ECR Repo Name
-          type: string
-          default: project_repo
-
 jobs:
   build_image:
     runs-on: ubuntu-latest
@@ -54,7 +49,7 @@ jobs:
         shell: bash
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{ inputs.ecr_repo_name }}
+          ECR_REPOSITORY: ${{ vars.ECR_REPO_NAME }}
           IMAGE_TAG: ${{ inputs.image_tag }}
         run: |
           docker build "${{ inputs.docker_build_dir }}" -f "${{ inputs.path_to_dockerfile }}" -t "$IMAGE_TAG" --platform=linux/amd64
