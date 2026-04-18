@@ -67,7 +67,6 @@ def get_archive_records_from_DB(bus_line, date_val):
                 )
                 cursor = connection.cursor()
                 cursor.execute("SELECT line_code, route_code, door_number, start_date, end_date, planned_start_date, edited_start_date FROM archive WHERE line_code = %s AND planned_start_date LIKE %s", [bus_line, f"%{date_val}%"])
-                print("eee")
                 return cursor.fetchall()
         except mysql.connector.errors.Error as err:
             raise Exception(err)
