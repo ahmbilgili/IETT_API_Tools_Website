@@ -44,6 +44,14 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
+      - name: Create .env and key files
+        env:
+          env_vars: ${{ secrets.PROD_ENV }}
+          key_file: ${{ secrets.IETT_JUMPHOST_KEY }}
+        run: |
+          echo "$env_vars" > prod.env
+          mkdir keys
+          echo "$key_file" > keys/iett-jumphost-key.pem
       - name: Build, tag and push the image
         id: build-publish
         shell: bash

@@ -6,6 +6,5 @@ departure_count/__pycache__/*
 departure_hours/__pycache__/*
 line_service/__pycache__/*
 *.env
-certs
 keys
-__pycache__/*
+__pycache__/
