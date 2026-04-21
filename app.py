@@ -13,8 +13,6 @@ import redis
 import time
 
 random.seed(10)
-os.environ["IN_TEST_CLOUD"] = "True"
-
 
 app = Flask(__name__)
 image = ImageCaptcha()
@@ -77,7 +75,6 @@ def vibe_check():
     else:
         num_of_req = result[1]
 
-    print(num_of_req)
     if num_of_req >= RATE_LIMIT:
         return Response("You've sent too many requests in a short period of time, please wait until cooldown period ends", status=429)
     
