@@ -12,6 +12,7 @@ import random
 import redis
 import time
 
+os.environ["IN_PROD"] = "True"
 random.seed(10)
 
 app = Flask(__name__)
@@ -42,7 +43,7 @@ RATE_LIMIT_WINDOW = 60
 
 redis_client = redis.Redis(
     host=REDIS_DB_IP,
-    port=REDIS_DB_PORT,
+    port=int(REDIS_DB_PORT),
     decode_responses=True,
     username=REDIS_DB_USER,
     password=REDIS_DB_PASSWORD
@@ -82,8 +83,10 @@ def vibe_check():
 def base_handler():
     return render_template("base.html")
 
+'''
 def run_app():
     app.run(host="127.0.0.1", port=50000, debug=True)
 
 if __name__ == "__main__":
     run_app()
+'''

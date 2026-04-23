@@ -5,24 +5,9 @@ permissions:
   contents: read    # Required for actions/checkout
 
 on:
-  workflow_dispatch:
-    inputs:
-      path_to_dockerfile:
-        description: Path to the dockerfile (default = 'Dockerfile')
-        default: "./Dockerfile"
-        type: string
-      docker_build_dir:
-        description: Docker build directory (default = '.')
-        default: "."
-        type: string
-      image_tag:
-        description: Tag to apply to images.
-        type: string
-        default: iett-website-image
-      aws_account_id:
-          description: AWS Account ID
-          type: string
-          default: 6076-8426-0657
+  push:
+    branches:
+      - main
 jobs:
   build_image:
     runs-on: ubuntu-latest
@@ -59,6 +44,10 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ vars.ECR_REPO_NAME }}
           IMAGE_TAG: ${{ inputs.image_tag }}
+          docker_build_dir: "."
+          path_to_dockerfile: "./Dockerfile"
+          image_tag: "iett-website-image"
+          aws_account_id: 6076-8426-0657
         run: |
           docker build "${{ inputs.docker_build_dir }}" -f "${{ inputs.path_to_dockerfile }}" -t "$IMAGE_TAG" --platform=linux/amd64
           echo "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
