@@ -10,6 +10,8 @@ on:
       - main
 jobs:
   build_image:
+    environment:
+      name: deployment
     runs-on: ubuntu-latest
     steps:
       - name: Display workdir
@@ -43,13 +45,12 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ vars.ECR_REPO_NAME }}
-          IMAGE_TAG: ${{ inputs.image_tag }}
-          docker_build_dir: "."
-          path_to_dockerfile: "./Dockerfile"
-          image_tag: "iett-website-image"
-          aws_account_id: 6076-8426-0657
+          IMAGE_TAG: "iett-api-website"
+          DOCKER_BUILD_DIR: "."
+          PATH_TO_DOCKERFILE: "./Dockerfile"
+          AWS_ACCOUNT_ID: 6076-8426-0657
         run: |
-          docker build "${{ inputs.docker_build_dir }}" -f "${{ inputs.path_to_dockerfile }}" -t "$IMAGE_TAG" --platform=linux/amd64
+          docker build "$DOCKER_BUILD_DIR" -f "$PATH_TO_DOCKERFILE" -t "$IMAGE_TAG" --platform=linux/amd64
           echo "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
           docker image ls
           docker tag "$IMAGE_TAG" "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
