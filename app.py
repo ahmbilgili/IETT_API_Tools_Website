@@ -81,12 +81,11 @@ def vibe_check():
     
 @app.route("/", methods=['GET'])
 def base_handler():
-    return render_template("base.html")
+    return render_template("welcome.html")
 
-'''
+
 def run_app():
     app.run(host="127.0.0.1", port=50000, debug=True)
 
 if __name__ == "__main__":
     run_app()
-'''
