@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, Blueprint, Response
+from flask import Flask, request, render_template, Blueprint, Response, redirect
 from flask_wtf import CSRFProtect
 import os
 from announcements.app import announcements_bp
@@ -83,6 +83,9 @@ def vibe_check():
 def base_handler():
     return render_template("welcome.html")
 
+@app.route("/easter", methods=['GET'])
+def easter_handler():
+    return redirect(os.getenv("EASTER_URL"))
 
 def run_app():
     app.run(host="127.0.0.1", port=50000, debug=True)
