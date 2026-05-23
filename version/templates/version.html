@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block head %}
+<title>Version</title>
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex flex-row justify-content-center mt-2">
+    <div class="d-flex flex-column justify-content-center mt-2">
+        <h3>Latest update date: {{ version_info['date'] }}</h3>
+        <h3>Latest update message: {{ version_info['message'] }}</h3>
+        <h3>URL: <a href={{ version_info['url'] }}>Github Link</a></h3>
+    </div>
+</div>
+{% endblock %}

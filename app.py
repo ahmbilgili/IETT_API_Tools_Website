@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, Blueprint, Response, redirect
+from flask import Flask, request, render_template, Blueprint, Response, redirect, g
 from flask_wtf import CSRFProtect
 import os
 from announcements.app import announcements_bp
@@ -7,6 +7,8 @@ from passenger_count.app import passenger_count_bp
 from departure_hours.app import departure_hours_bp
 from line_service.app import line_service_bp
 from feedback.app import feedback_bp
+from version.app import version_bp
+
 from captcha.image import ImageCaptcha
 import random
 import redis
@@ -27,6 +29,7 @@ app.register_blueprint(passenger_count_bp)
 app.register_blueprint(departure_hours_bp)
 app.register_blueprint(line_service_bp)
 app.register_blueprint(feedback_bp)
+app.register_blueprint(version_bp)
 
 csrf = CSRFProtect(app=app)
 csrf.init_app(app)
@@ -57,7 +60,7 @@ def vibe_check():
     # pipe that can queue multiple commands for later execution
     pipe = redis_client.pipeline()
 
-    pipe.zadd(key, {f"now: {curr_time}": curr_time})
+    pipe.zadd(key, {f"now:": curr_time})
 
     if redis_client.zcard(key) == 0:
         # Setting exp date on key
@@ -79,6 +82,12 @@ def vibe_check():
     if num_of_req >= RATE_LIMIT:
         return Response("You've sent too many requests in a short period of time, please wait until cooldown period ends", status=429)
     
+
+@app.before_request
+def get_version_info():
+    version_info = redis_client.hgetall(name="latest_commit")
+    g.version_info = version_info
+
 @app.route("/", methods=['GET'])
 def base_handler():
     return render_template("welcome.html")
