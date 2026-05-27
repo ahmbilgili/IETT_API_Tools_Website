@@ -57,7 +57,7 @@ def vibe_check():
     # pipe that can queue multiple commands for later execution
     pipe = redis_client.pipeline()
 
-    pipe.zadd(key, {f"now: {curr_time}": curr_time})
+    pipe.zadd(key, {f"now:": curr_time})
 
     if redis_client.zcard(key) == 0:
         # Setting exp date on key

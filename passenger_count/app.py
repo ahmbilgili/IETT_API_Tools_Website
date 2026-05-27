@@ -5,11 +5,11 @@ import threading
 from scripts import passenger_count_day
 from scripts.utils.functions import generate_captcha
 
-'''
 passenger_count_bp = Blueprint("passenger_count", __name__, template_folder="templates")
 
 @passenger_count_bp.route("/passenger_count", methods=['POST', 'GET'])
 def passenger_count_day_handler():
+    '''
     form = PassengerCountForm(request.form)
     if request.method == "POST":
         if form.validate_on_submit():
@@ -31,5 +31,5 @@ def passenger_count_day_handler():
             return render_template("passenger_count.html", form=form, message=form.errors.values(), captcha=captcha_data)        
     captcha_code, captcha_data = generate_captcha()
     session["captcha_code"] = captcha_code
-    return render_template("passenger_count.html", form=form, captcha=captcha_data)
-'''
+    '''
+    return render_template("passenger_count.html")
