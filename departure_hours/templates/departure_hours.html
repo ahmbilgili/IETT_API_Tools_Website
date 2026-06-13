@@ -10,7 +10,7 @@
         <div class="card bg-light d-flex flex-row justify-content-center">
             <div class="card-body">
                 <p>This service displays information about departure hours of the given line.</p>
-                <p>First field expects line code.</p> 
+                <p>First field expects line code. (Line codes: <a href=https://iett.istanbul/RouteStation/Search>https://iett.istanbul/RouteStation/Search</a>)</p> 
                 <p>Second field expects day type (weekday/saturday/sunday).</p> 
                 <p>Third field will appear after submitting the form. Expects the direction you wish to travel to.</p> 
             </div>
@@ -21,7 +21,7 @@
             <div class="mx-auto" style="max-width: 650px;">
                 <div class="row g-2 align-items-center">
                     <div class="col">
-                        {{ form.line_code(placeholder="Line Code", class="form-control") }}
+                        {{ form.line_code(placeholder="Line Code (e.g. KM18)", class="form-control") }}
                     </div>
                     <div class="col">
                         {{ form.day(placeholder="Day", class="form-control") }}
@@ -52,16 +52,16 @@
 
         <form class="container mt-2 mb-5" method="POST">
             {{ form.csrf_token }}
-            <div class="mx-auto" style="max-width: 700px;">
+            <div class="mx-auto" style="max-width: 1000px;">
                 <div class="row g-2 mb-2">
                     <div class="col">
-                        {{ form.line_code(placeholder="Line Code", class="form-control") }}
+                        {{ form.line_code(placeholder="Line Code (e.g. KM18)", class="form-control") }}
                     </div>
                     <div class="col">
-                        {{ form.day(placeholder="Day", class="form-control") }}
+                        {{ form.day(placeholder="Day (e.g. Weekday)", class="form-control") }}
                     </div>
                     <div class="col">
-                        {{ form.direction(placeholder="Direction", class="form-control") }}
+                        {{ form.direction(placeholder="Direction (e.g. Kurtköy)", class="form-control") }}
                     </div>
                     <div class="col-auto">
                         <button class="btn btn-primary px-4" type="submit" style="border-radius: 0.375rem;">

@@ -11,7 +11,7 @@
         <div class="card bg-light">
             <div class="card-body">
                 <p>This service displays information about given line.</p>
-                <p>Field expects line code.</p> 
+                <p>Field expects line code. (Line codes: <a href=https://iett.istanbul/RouteStation/Search>https://iett.istanbul/RouteStation/Search</a>)</p> 
                 <p>Leave the field empty to see all lines.</p>
             </div>
         </div>
@@ -22,7 +22,7 @@
                 
                 <div class="row g-2 mb-2">
                     <div class="col-12">
-                        {{ form.line_code(placeholder="Line Code", class="form-control w-100") }}
+                        {{ form.line_code(placeholder="Line Code (e.g. KM18)", class="form-control w-100") }}
                     </div>
                 </div>
 

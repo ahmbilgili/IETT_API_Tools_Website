@@ -12,7 +12,7 @@
                 <p>This service displays information about archive logs of the specified line at given date.</p>
                 <p>Only records from 2023 and after are available.</p>
                 <p>First field expects date.</p> 
-                <p>Second field expects line code.</p>
+                <p>Second field expects line code. (Line codes: <a href=https://iett.istanbul/RouteStation/Search>https://iett.istanbul/RouteStation/Search</a>)</p>
             </div>
         </div>
         <form class="container mt-2 mb-5" method="POST">
@@ -22,10 +22,10 @@
                 
                 <div class="row g-2 mb-3">
                     <div class="col-6">
-                        {{ form.date(placeholder="YYYYMMDD", class="form-control w-100") }}
+                        {{ form.date(placeholder="YYYYMMDD (e.g. 20260101, 2026 -> year, 01 -> month, 01 -> day)", class="form-control w-100") }}
                     </div>
                     <div class="col-6">
-                        {{ form.line_code(placeholder="Line Code", class="form-control w-100") }}
+                        {{ form.line_code(placeholder="Line Code (e.g. KM18)", class="form-control w-100") }}
                     </div>
                 </div>
 
